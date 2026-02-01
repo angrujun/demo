@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Data API: Most Comprehensive & Reliable Crypto Price & Market Data | CoinGecko API</title>
+  <meta name="description" content="Get reliable crypto prices and market data with CoinGecko API. Access rich metadata, historical charts and on-chain coverage across 260+ networks.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --green: #4BCC00;
+      --green-hover: #43b800;
+      --green-light: #e2f9d0;
+      --green-glow: rgba(75, 204, 0, 0.25);
+      --bg-white: #FFFFFF;
+      --bg-alt: #F8F9FA;
+      --bg-dark: #111827;
+      --bg-dark-card: #1a2332;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #9CA3AF;
+      --text-on-dark: #F9FAFB;
+      --border: #E5E7EB;
+      --border-light: #F3F4F6;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+      --shadow-green: 0 4px 20px rgba(75,204,0,0.3);
+      --font-heading: 'Quicksand', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --max-w: 1200px;
+      --nav-h: 72px;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-body); color: var(--text-primary); background: var(--bg-white); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 700; line-height: 1.2; }
+
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+    @media (max-width: 768px) { .section { padding: 56px 0; } }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: var(--radius-sm); font-weight: 600; font-size: 15px; transition: all 0.25s ease; white-space: nowrap; }
+    .btn-primary { background: var(--green); color: #fff; box-shadow: var(--shadow-green); }
+    .btn-primary:hover { background: var(--green-hover); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(75,204,0,0.4); }
+    .btn-outline { border: 2px solid var(--border); color: var(--text-primary); background: var(--bg-white); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.3); color: #fff; }
+    .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.35s; }
+
+    /* ===== NAVBAR ===== */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color 0.3s, box-shadow 0.3s; }
+    .navbar.scrolled { border-bottom-color: var(--border); box-shadow: var(--shadow-sm); }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-heading); font-weight: 700; font-size: 22px; color: var(--green); }
+    .nav-logo svg { flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 15px; font-weight: 500; color: var(--text-secondary); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-cta { display: flex; align-items: center; gap: 12px; }
+    .nav-cta .btn { padding: 10px 22px; font-size: 14px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; padding: 8px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .mobile-menu { display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; background: var(--bg-white); border-bottom: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow-md); }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a { display: block; padding: 12px 0; font-size: 16px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid var(--border-light); }
+    .mobile-menu .btn { width: 100%; margin-top: 16px; }
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ===== HERO ===== */
+    .hero { padding-top: calc(var(--nav-h) + 64px); padding-bottom: 48px; background: linear-gradient(168deg, #fff 40%, var(--green-light) 100%); position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; top: -40%; right: -20%; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(75,204,0,0.08) 0%, transparent 70%); pointer-events: none; }
+    .hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .hero-content { position: relative; z-index: 1; }
+    .hero h1 { font-size: clamp(32px, 4.2vw, 52px); color: var(--text-primary); margin-bottom: 20px; letter-spacing: -0.5px; }
+    .hero h1 span { color: var(--green); }
+    .hero-sub { font-size: clamp(16px, 1.6vw, 19px); color: var(--text-secondary); margin-bottom: 32px; max-width: 520px; line-height: 1.7; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-visual { position: relative; z-index: 1; display: flex; justify-content: center; }
+    .json-window { background: var(--bg-dark); border-radius: var(--radius); padding: 0; width: 100%; max-width: 460px; box-shadow: var(--shadow-lg), 0 0 60px rgba(75,204,0,0.08); animation: float 5s ease-in-out infinite; overflow: hidden; }
+    .json-titlebar { display: flex; align-items: center; gap: 8px; padding: 14px 18px; background: rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .json-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .json-dot.red { background: #ff5f57; }
+    .json-dot.yellow { background: #ffbd2e; }
+    .json-dot.g { background: #28ca42; }
+    .json-titlebar span { margin-left: auto; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+    .json-body { padding: 20px; font-family: var(--font-mono); font-size: 13px; line-height: 1.8; color: #d1d5db; overflow-x: auto; }
+    .json-body .key { color: #93c5fd; }
+    .json-body .string { color: #86efac; }
+    .json-body .number { color: #fcd34d; }
+    .json-body .bracket { color: #9ca3af; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .trust-bar { margin-top: 56px; display: flex; gap: 40px; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 10px; }
+    .trust-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; }
+    .trust-icon svg { width: 18px; height: 18px; color: var(--green); }
+    .trust-label strong { display: block; font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .trust-label span { font-size: 13px; color: var(--text-secondary); }
+
+    @media (max-width: 1024px) {
+      .hero .container { grid-template-columns: 1fr; text-align: center; }
+      .hero-sub { margin-left: auto; margin-right: auto; }
+      .hero-ctas { justify-content: center; }
+      .hero-visual { margin-top: 16px; }
+      .trust-bar { justify-content: center; }
+    }
+
+    /* ===== LOGO BAR ===== */
+    .logo-bar { padding: 40px 0; border-bottom: 1px solid var(--border-light); overflow: hidden; }
+    .logo-bar-label { text-align: center; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 28px; }
+    .logo-track { display: flex; align-items: center; justify-content: center; gap: 56px; flex-wrap: wrap; }
+    .logo-track .partner-logo { font-family: var(--font-heading); font-weight: 700; font-size: 18px; color: var(--text-muted); opacity: 0.5; transition: opacity 0.3s; white-space: nowrap; }
+    .logo-track .partner-logo:hover { opacity: 0.8; }
+    @media (max-width: 768px) {
+      .logo-track { flex-wrap: nowrap; gap: 48px; animation: marquee 20s linear infinite; width: max-content; }
+      .logo-bar-inner { overflow: hidden; }
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ===== METRICS ===== */
+    .metrics { background: var(--bg-white); }
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .metric-card { text-align: center; padding: 36px 24px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-white); transition: box-shadow 0.3s, transform 0.3s; }
+    .metric-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .metric-number { font-family: var(--font-heading); font-size: clamp(32px, 3.5vw, 44px); font-weight: 700; color: var(--green); margin-bottom: 4px; }
+    .metric-suffix { font-family: var(--font-heading); font-weight: 700; color: var(--green); }
+    .metric-label { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+    @media (max-width: 768px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .metrics-grid { grid-template-columns: 1fr; } }
+
+    /* ===== SECTION HEADER ===== */
+    .section-header { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+    .section-header h2 { font-size: clamp(26px, 3vw, 36px); margin-bottom: 12px; }
+    .section-header p { font-size: 17px; color: var(--text-secondary); }
+
+    /* ===== VALUE PROPS ===== */
+    .value-props { background: var(--bg-alt); }
+    .props-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+    .prop-card { background: var(--bg-white); border-radius: var(--radius); padding: 32px 24px; border: 1px solid var(--border-light); transition: box-shadow 0.3s, transform 0.3s; }
+    .prop-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+    .prop-icon { width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--green-light); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .prop-icon svg { width: 24px; height: 24px; color: var(--green); }
+    .prop-card h3 { font-size: 18px; margin-bottom: 10px; }
+    .prop-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.65; }
+    @media (max-width: 1024px) { .props-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px) { .props-grid { grid-template-columns: 1fr; } }
+
+    /* ===== USE CASES ===== */
+    .use-cases { background: var(--bg-white); }
+    .tabs-nav { display: flex; gap: 4px; background: var(--bg-alt); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 32px; }
+    .tab-btn { flex: 1; padding: 12px 20px; border-radius: 6px; font-weight: 600; font-size: 14px; color: var(--text-secondary); text-align: center; transition: all 0.25s; }
+    .tab-btn.active { background: var(--bg-white); color: var(--green); box-shadow: var(--shadow-sm); }
+    .tab-btn:hover:not(.active) { color: var(--text-primary); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .tab-text h3 { font-size: 22px; margin-bottom: 12px; }
+    .tab-text p { font-size: 15px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 20px; }
+    .tab-text .learn-link { font-size: 14px; font-weight: 600; color: var(--green); display: inline-flex; align-items: center; gap: 6px; }
+    .tab-text .learn-link:hover { text-decoration: underline; }
+    .tab-code { background: var(--bg-dark); border-radius: var(--radius-sm); overflow: hidden; }
+    .tab-code-header { padding: 12px 16px; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 8px; }
+    .tab-code-header .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+    .tab-code pre { padding: 20px 16px; font-family: var(--font-mono); font-size: 13px; color: #d1d5db; line-height: 1.7; overflow-x: auto; }
+    .tab-code pre .comment { color: #6b7280; }
+    .tab-code pre .method { color: #93c5fd; }
+    .tab-code pre .url { color: #86efac; }
+    @media (max-width: 768px) {
+      .tabs-nav { display: none; }
+      .tab-panel { display: block !important; margin-bottom: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+      .tab-panel .tab-text, .tab-panel .tab-code { padding: 0; }
+      .accordion-trigger { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; font-weight: 600; font-size: 15px; cursor: pointer; background: var(--bg-alt); }
+      .accordion-trigger svg { transition: transform 0.3s; }
+      .accordion-trigger.open svg { transform: rotate(180deg); }
+      .accordion-body { display: none; padding: 20px; }
+      .accordion-body.open { display: block; }
+      .tab-panel.active { display: block; grid-template-columns: unset; }
+      .tab-panel .tab-code { margin-top: 16px; }
+    }
+    @media (min-width: 769px) {
+      .accordion-trigger { display: none; }
+    }
+
+    /* ===== FEATURES GRID ===== */
+    .features { background: var(--bg-alt); }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature-card { background: var(--bg-white); border: 1px solid var(--border-light); border-radius: var(--radius); padding: 28px; transition: box-shadow 0.3s, transform 0.3s; }
+    .feature-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .feature-icon { width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--green-light); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; }
+    .feature-card h4 { font-size: 16px; margin-bottom: 8px; }
+    .feature-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+    @media (max-width: 768px) { .features-grid { grid-template-columns: 1fr; } }
+
+    /* ===== DEVELOPER EXPERIENCE ===== */
+    .dev-experience { background: var(--bg-white); }
+    .dx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .playground { background: var(--bg-dark); border-radius: var(--radius); overflow: hidden; }
+    .playground-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .playground-header span { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+    .playground-controls { display: flex; gap: 10px; align-items: center; }
+    .coin-select { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 6px 12px; border-radius: 6px; font-family: var(--font-mono); font-size: 13px; }
+    .coin-select option { background: var(--bg-dark); }
+    .run-btn { background: var(--green); color: #fff; padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; transition: background 0.2s; }
+    .run-btn:hover { background: var(--green-hover); }
+    .playground-output { padding: 20px; font-family: var(--font-mono); font-size: 12px; color: #d1d5db; line-height: 1.8; min-height: 220px; white-space: pre; overflow-x: auto; }
+    .dx-info h3 { font-size: 24px; margin-bottom: 16px; }
+    .dx-info > p { font-size: 15px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 28px; }
+    .sdk-row { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+    .sdk-badge { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: var(--bg-alt); border-radius: 100px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border: 1px solid var(--border); }
+    .quick-steps { display: flex; flex-direction: column; gap: 16px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+    .step-text { font-size: 14px; color: var(--text-secondary); padding-top: 5px; }
+    .step-text strong { color: var(--text-primary); }
+    @media (max-width: 1024px) { .dx-grid { grid-template-columns: 1fr; } }
+
+    /* ===== TESTIMONIAL ===== */
+    .testimonial { background: var(--bg-alt); }
+    .testimonial-card { max-width: 720px; margin: 0 auto; text-align: center; position: relative; padding: 48px 40px; }
+    .testimonial-card .quote-mark { font-size: 120px; font-family: Georgia, serif; color: var(--green); opacity: 0.15; line-height: 0.8; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
+    .testimonial-card blockquote { font-size: clamp(18px, 2vw, 22px); font-family: var(--font-heading); font-weight: 600; color: var(--text-primary); line-height: 1.6; margin-bottom: 24px; position: relative; }
+    .testimonial-card cite { font-style: normal; font-size: 15px; color: var(--text-secondary); }
+    .testimonial-card cite strong { color: var(--text-primary); }
+
+    /* ===== PRICING ===== */
+    .pricing { background: var(--bg-white); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .price-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 28px; text-align: center; position: relative; transition: box-shadow 0.3s, transform 0.3s; }
+    .price-card:hover { box-shadow: var(--shadow-md); }
+    .price-card.featured { border-color: var(--green); box-shadow: 0 0 0 1px var(--green), var(--shadow-md); transform: scale(1.03); }
+    .price-card.featured:hover { transform: scale(1.05); }
+    .price-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--green); color: #fff; padding: 4px 16px; border-radius: 100px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .price-card h3 { font-size: 20px; margin-bottom: 8px; margin-top: 8px; }
+    .price-amount { font-size: 40px; font-family: var(--font-heading); font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .price-amount span { font-size: 16px; font-weight: 500; color: var(--text-muted); }
+    .price-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 24px; }
+    .price-features { list-style: none; margin-bottom: 28px; text-align: left; }
+    .price-features li { padding: 8px 0; font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-light); }
+    .price-features li:last-child { border: none; }
+    .price-features .check { color: var(--green); font-weight: 700; font-size: 16px; }
+    .price-card .btn { width: 100%; }
+    .pricing-footer { text-align: center; margin-top: 32px; }
+    .pricing-footer a { font-size: 15px; font-weight: 600; color: var(--green); }
+    .pricing-footer a:hover { text-decoration: underline; }
+    @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; } .price-card.featured { transform: none; } }
+
+    /* ===== CTA BANNER ===== */
+    .cta-banner { background: var(--bg-dark); position: relative; overflow: hidden; }
+    .cta-banner::before { content: ''; position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(75,204,0,0.1) 0%, transparent 70%); }
+    .cta-banner .container { text-align: center; position: relative; z-index: 1; }
+    .cta-banner h2 { font-size: clamp(26px, 3vw, 38px); color: var(--text-on-dark); margin-bottom: 24px; }
+    .cta-banner-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ===== FAQ ===== */
+    .faq { background: var(--bg-alt); }
+    .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item { background: var(--bg-white); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; cursor: pointer; font-weight: 600; font-size: 15px; gap: 16px; transition: color 0.2s; }
+    .faq-question:hover { color: var(--green); }
+    .faq-question svg { flex-shrink: 0; transition: transform 0.3s; color: var(--text-muted); }
+    .faq-item.open .faq-question svg { transform: rotate(180deg); color: var(--green); }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+    .faq-answer-inner { padding: 0 24px 20px; font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .faq-item.open .faq-answer { max-height: 300px; }
+
+    /* ===== FOOTER ===== */
+    .footer { background: var(--bg-dark); color: var(--text-on-dark); padding: 64px 0 0; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 48px; margin-bottom: 48px; }
+    .footer-brand p { font-size: 14px; color: #9ca3af; line-height: 1.7; margin-top: 16px; max-width: 280px; }
+    .footer-col h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 20px; font-family: var(--font-body); }
+    .footer-col a { display: block; font-size: 14px; color: #d1d5db; padding: 5px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--green); }
+    .footer-solutions { background: var(--bg-dark-card); border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; }
+    .footer-solutions h5 { font-size: 13px; font-weight: 600; color: #d1d5db; margin-bottom: 10px; }
+    .footer-solutions a { font-size: 13px; color: var(--green); }
+    .footer-solutions a:hover { text-decoration: underline; }
+    .footer-newsletter { margin-top: 20px; }
+    .footer-newsletter .nl-form { display: flex; gap: 8px; margin-top: 10px; }
+    .footer-newsletter input { flex: 1; padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: #fff; font-size: 14px; }
+    .footer-newsletter input::placeholder { color: var(--text-muted); }
+    .footer-newsletter button { padding: 10px 18px; border-radius: 6px; background: var(--green); color: #fff; font-size: 14px; font-weight: 600; }
+    .social-row { display: flex; gap: 16px; margin-top: 24px; }
+    .social-row a { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .social-row a:hover { background: var(--green); }
+    .social-row svg { width: 16px; height: 16px; color: #d1d5db; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 0; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px; }
+    .footer-bottom a { color: var(--text-muted); transition: color 0.2s; }
+    .footer-bottom a:hover { color: var(--green); }
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="16" fill="#4BCC00"/>
+          <circle cx="12" cy="13" r="2.5" fill="#fff"/>
+          <circle cx="11.5" cy="12.5" r="1" fill="#111827"/>
+          <ellipse cx="16" cy="20" rx="6" ry="4" fill="#3da600"/>
+          <path d="M10 20c0-1.5 2.7-3 6-3s6 1.5 6 3" stroke="#fff" stroke-width="0.8" fill="none"/>
+        </svg>
+        CoinGecko
+      </a>
+      <div class="nav-links">
+        <a href="#use-cases">Products</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#dx">Docs</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="nav-cta">
+        <a href="#pricing" class="btn btn-outline" style="padding:10px 18px;font-size:14px;">Explore Docs</a>
+        <a href="#" class="btn btn-primary" style="padding:10px 18px;font-size:14px;">Get API Key</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#use-cases">Products</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#dx">Docs</a>
+    <a href="#faq">FAQ</a>
+    <a href="#" class="btn btn-primary">Get API Key</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content reveal">
+        <h1>Power the Future of Finance with the World's Most Reliable <span>Crypto API</span></h1>
+        <p class="hero-sub">Access real-time and historical data for 14,000+ assets across 1,000+ exchanges. One integration, infinite possibilities.</p>
+        <div class="hero-ctas">
+          <a href="#" class="btn btn-primary">Get Your Free API Key</a>
+          <a href="#" class="btn btn-outline">Explore API Docs</a>
+        </div>
+        <div class="trust-bar">
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="trust-label"><strong>99.9%</strong><span>Uptime SLA</span></div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="trust-label"><strong>10B+</strong><span>Monthly Calls</span></div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div class="trust-label"><strong>10+ Years</strong><span>Historical Data</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual reveal reveal-delay-2">
+        <div class="json-window">
+          <div class="json-titlebar">
+            <span class="json-dot red"></span>
+            <span class="json-dot yellow"></span>
+            <span class="json-dot g"></span>
+            <span>GET /api/v3/coins/bitcoin</span>
+          </div>
+          <div class="json-body">
+<span class="bracket">{</span>
+  <span class="key">"id"</span>: <span class="string">"bitcoin"</span>,
+  <span class="key">"symbol"</span>: <span class="string">"btc"</span>,
+  <span class="key">"name"</span>: <span class="string">"Bitcoin"</span>,
+  <span class="key">"market_data"</span>: <span class="bracket">{</span>
+    <span class="key">"current_price"</span>: <span class="bracket">{</span>
+      <span class="key">"usd"</span>: <span class="number">97,432.18</span>,
+      <span class="key">"eur"</span>: <span class="number">89,215.44</span>
+    <span class="bracket">}</span>,
+    <span class="key">"market_cap"</span>: <span class="bracket">{</span>
+      <span class="key">"usd"</span>: <span class="number">1,912,345,678,901</span>
+    <span class="bracket">}</span>,
+    <span class="key">"price_change_24h"</span>: <span class="number">2.34</span>
+  <span class="bracket">}</span>
+<span class="bracket">}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGO BAR -->
+  <section class="logo-bar">
+    <div class="container">
+      <p class="logo-bar-label">Powering the best in Crypto</p>
+      <div class="logo-bar-inner">
+        <div class="logo-track">
+          <span class="partner-logo">MetaMask</span>
+          <span class="partner-logo">Etherscan</span>
+          <span class="partner-logo">Chainlink</span>
+          <span class="partner-logo">Trust Wallet</span>
+          <span class="partner-logo">Crypto.com</span>
+          <span class="partner-logo">Arkham</span>
+          <!-- dupes for seamless mobile scroll -->
+          <span class="partner-logo" aria-hidden="true">MetaMask</span>
+          <span class="partner-logo" aria-hidden="true">Etherscan</span>
+          <span class="partner-logo" aria-hidden="true">Chainlink</span>
+          <span class="partner-logo" aria-hidden="true">Trust Wallet</span>
+          <span class="partner-logo" aria-hidden="true">Crypto.com</span>
+          <span class="partner-logo" aria-hidden="true">Arkham</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY METRICS -->
+  <section class="metrics section" id="metrics">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>The Most Trusted Crypto Data API</h2>
+        <p>Battle-tested data infrastructure trusted by thousands of developers worldwide.</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card reveal reveal-delay-1">
+          <div class="metric-number"><span data-target="14000" class="counter">0</span><span class="metric-suffix">+</span></div>
+          <div class="metric-label">Coins & Tokens</div>
+        </div>
+        <div class="metric-card reveal reveal-delay-2">
+          <div class="metric-number"><span data-target="1000" class="counter">0</span><span class="metric-suffix">+</span></div>
+          <div class="metric-label">Exchanges Covered</div>
+        </div>
+        <div class="metric-card reveal reveal-delay-3">
+          <div class="metric-number"><span data-target="260" class="counter">0</span><span class="metric-suffix">+</span></div>
+          <div class="metric-label">Blockchain Networks</div>
+        </div>
+        <div class="metric-card reveal reveal-delay-4">
+          <div class="metric-number"><span class="counter" data-target="99.9" data-decimal="true">0</span><span class="metric-suffix">%</span></div>
+          <div class="metric-label">Uptime SLA</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE PROPS -->
+  <section class="value-props section">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Why Projects Choose CoinGecko</h2>
+        <p>One API for all crypto market data — from blue chips to the latest DEX pairs.</p>
+      </div>
+      <div class="props-grid">
+        <div class="prop-card reveal reveal-delay-1">
+          <div class="prop-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3>Comprehensive Coverage</h3>
+          <p>From Bitcoin to the latest meme coins and DEX pairs. All the data you need in one unified API.</p>
+        </div>
+        <div class="prop-card reveal reveal-delay-2">
+          <div class="prop-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>Developer-First DX</h3>
+          <p>Clean RESTful endpoints, robust SDKs in 5 languages, and documentation that actually helps.</p>
+        </div>
+        <div class="prop-card reveal reveal-delay-3">
+          <div class="prop-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <h3>Unmatched Accuracy</h3>
+          <p>Volume-weighted average pricing aggregated across exchanges. Data you can actually trust.</p>
+        </div>
+        <div class="prop-card reveal reveal-delay-4">
+          <div class="prop-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <h3>Infinite Scalability</h3>
+          <p>From hobby projects to enterprise-grade systems handling millions of requests per day.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="use-cases section" id="use-cases">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Built for Every Use Case</h2>
+        <p>See how teams are using CoinGecko API to power their products.</p>
+      </div>
+      <div class="reveal">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="wallets">Wallets</button>
+          <button class="tab-btn" data-tab="exchanges">Exchanges</button>
+          <button class="tab-btn" data-tab="nft">NFT Platforms</button>
+          <button class="tab-btn" data-tab="institutional">Institutional</button>
+        </div>
+
+        <!-- Wallets -->
+        <div class="tab-panel active" data-panel="wallets">
+          <div class="accordion-trigger open" data-tab="wallets">Wallets <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="accordion-body open">
+            <div class="tab-text">
+              <h3>Real-Time Portfolio Tracking</h3>
+              <p>Power real-time portfolio tracking with precise price data for 14,000+ assets. Give your users accurate, up-to-the-second valuations across every token they hold.</p>
+              <a href="#" class="learn-link">Learn more &rarr;</a>
+            </div>
+            <div class="tab-code">
+              <div class="tab-code-header"><span class="dot"></span> API Request</div>
+              <pre><span class="comment"># Get current prices for multiple tokens</span>
+<span class="method">GET</span> <span class="url">/api/v3/simple/price</span>
+  ?ids=bitcoin,ethereum,solana
+  &vs_currencies=usd
+  &include_24hr_change=true</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exchanges -->
+        <div class="tab-panel" data-panel="exchanges">
+          <div class="accordion-trigger" data-tab="exchanges">Exchanges <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="accordion-body">
+            <div class="tab-text">
+              <h3>Cross-Platform Data Sync</h3>
+              <p>Sync order books and ticker data across 1,000+ platforms. Ensure your exchange surfaces the most competitive and accurate market data available.</p>
+              <a href="#" class="learn-link">Learn more &rarr;</a>
+            </div>
+            <div class="tab-code">
+              <div class="tab-code-header"><span class="dot"></span> API Request</div>
+              <pre><span class="comment"># Get exchange tickers</span>
+<span class="method">GET</span> <span class="url">/api/v3/exchanges/binance/tickers</span>
+  ?coin_ids=bitcoin
+  &include_exchange_logo=true
+  &depth=true</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- NFT -->
+        <div class="tab-panel" data-panel="nft">
+          <div class="accordion-trigger" data-tab="nft">NFT Platforms <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="accordion-body">
+            <div class="tab-text">
+              <h3>NFT Floor Prices & Metadata</h3>
+              <p>Access floor prices and rich metadata from OpenSea, Magic Eden, and more. Build NFT analytics dashboards your users will love.</p>
+              <a href="#" class="learn-link">Learn more &rarr;</a>
+            </div>
+            <div class="tab-code">
+              <div class="tab-code-header"><span class="dot"></span> API Request</div>
+              <pre><span class="comment"># Get NFT collection data</span>
+<span class="method">GET</span> <span class="url">/api/v3/nfts/bored-ape-yacht-club</span>
+  ?include_floor_price=true
+  &include_market_cap=true</pre>
+            </div>
+          </div>
+        </div>
+
+        <!-- Institutional -->
+        <div class="tab-panel" data-panel="institutional">
+          <div class="accordion-trigger" data-tab="institutional">Institutional Analytics <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="accordion-body">
+            <div class="tab-text">
+              <h3>Deep Historical Analysis</h3>
+              <p>Fuel your research with 10+ years of historical OHLCV data. Build quantitative models and analytics platforms with institutional-grade accuracy.</p>
+              <a href="#" class="learn-link">Learn more &rarr;</a>
+            </div>
+            <div class="tab-code">
+              <div class="tab-code-header"><span class="dot"></span> API Request</div>
+              <pre><span class="comment"># Get historical OHLCV data</span>
+<span class="method">GET</span> <span class="url">/api/v3/coins/bitcoin/ohlc</span>
+  ?vs_currency=usd
+  &days=365
+  &interval=daily</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE GRID -->
+  <section class="features section">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Everything You Need, One API</h2>
+        <p>A comprehensive suite of endpoints for every crypto data requirement.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">&#9889;</div>
+          <h4>REST & WebSocket APIs</h4>
+          <p>Real-time streaming data via WebSocket and traditional REST endpoints for maximum flexibility.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">&#127760;</div>
+          <h4>Global Fiat Support</h4>
+          <p>Convert crypto prices to 50+ fiat currencies including USD, EUR, GBP, JPY and more.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">&#128200;</div>
+          <h4>Historical OHLCV Charts</h4>
+          <p>Access open, high, low, close, and volume data spanning over a decade of market history.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-1">
+          <div class="feature-icon">&#128279;</div>
+          <h4>Token Metadata</h4>
+          <p>Contract addresses, platform details, categories, and rich metadata for every listed asset.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-2">
+          <div class="feature-icon">&#128293;</div>
+          <h4>Trending & Categories</h4>
+          <p>Surface trending coins, market categories, and gainers/losers to keep your users engaged.</p>
+        </div>
+        <div class="feature-card reveal reveal-delay-3">
+          <div class="feature-icon">&#128176;</div>
+          <h4>Exchange Volumes</h4>
+          <p>Ticker data and trade volumes from 1,000+ centralized and decentralized exchanges.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEVELOPER EXPERIENCE -->
+  <section class="dev-experience section" id="dx">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Developer Experience That Delights</h2>
+        <p>From first API call to production — we've got your back.</p>
+      </div>
+      <div class="dx-grid">
+        <div class="playground reveal">
+          <div class="playground-header">
+            <span>Try it Now</span>
+            <div class="playground-controls">
+              <select class="coin-select" id="coinSelect">
+                <option value="bitcoin">Bitcoin (BTC)</option>
+                <option value="ethereum">Ethereum (ETH)</option>
+              </select>
+              <button class="run-btn" id="runBtn">Run &#9654;</button>
+            </div>
+          </div>
+          <div class="playground-output" id="playgroundOutput">
+<span style="color:#6b7280">// Click "Run" to see a sample response</span>
+
+<span style="color:#6b7280">GET /api/v3/simple/price?ids=bitcoin&vs_currencies=usd</span>
+          </div>
+        </div>
+        <div class="dx-info reveal reveal-delay-2">
+          <h3>Start Building in Minutes</h3>
+          <p>Clean RESTful API with SDKs for your favorite language. Comprehensive docs, code samples, and a generous free tier to get you started.</p>
+          <div class="sdk-row">
+            <span class="sdk-badge">&#128013; Python</span>
+            <span class="sdk-badge">&#9997;&#65039; JavaScript</span>
+            <span class="sdk-badge">&#128142; Ruby</span>
+            <span class="sdk-badge">&#128039; Go</span>
+            <span class="sdk-badge">&#128024; PHP</span>
+          </div>
+          <div class="quick-steps">
+            <div class="step"><span class="step-num">1</span><div class="step-text"><strong>Sign Up</strong> — Create your free CoinGecko account</div></div>
+            <div class="step"><span class="step-num">2</span><div class="step-text"><strong>Generate Key</strong> — Get your API key from the dashboard</div></div>
+            <div class="step"><span class="step-num">3</span><div class="step-text"><strong>First Request</strong> — Run your first cURL and see data flow</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <section class="testimonial section">
+    <div class="container">
+      <div class="testimonial-card reveal">
+        <div class="quote-mark">&ldquo;</div>
+        <blockquote>CoinGecko is the gold standard for crypto data. Their API uptime and depth of coverage made them our obvious choice for powering our entire data pipeline.</blockquote>
+        <cite>— <strong>Head of Product</strong> at a Top 5 Crypto Wallet</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing section" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Simple, Transparent Pricing</h2>
+        <p>Start free. Scale as you grow. No surprises.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card reveal reveal-delay-1">
+          <h3>Demo</h3>
+          <div class="price-amount">$0<span>/mo</span></div>
+          <p class="price-desc">Perfect for testing and prototyping</p>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> 10,000 calls/month</li>
+            <li><span class="check">&#10003;</span> Core market data</li>
+            <li><span class="check">&#10003;</span> Community support</li>
+            <li><span class="check">&#10003;</span> 30-second refresh</li>
+          </ul>
+          <a href="#" class="btn btn-outline">Start Free</a>
+        </div>
+        <div class="price-card featured reveal reveal-delay-2">
+          <span class="price-badge">Most Popular</span>
+          <h3>Analyst</h3>
+          <div class="price-amount">$129<span>/mo</span></div>
+          <p class="price-desc">For growing startups and teams</p>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> 500,000 calls/month</li>
+            <li><span class="check">&#10003;</span> Full market data + NFTs</li>
+            <li><span class="check">&#10003;</span> Priority support</li>
+            <li><span class="check">&#10003;</span> Historical OHLCV data</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Get Started</a>
+        </div>
+        <div class="price-card reveal reveal-delay-3">
+          <h3>Enterprise</h3>
+          <div class="price-amount">Custom</div>
+          <p class="price-desc">For high-throughput requirements</p>
+          <ul class="price-features">
+            <li><span class="check">&#10003;</span> Unlimited calls</li>
+            <li><span class="check">&#10003;</span> WebSocket + REST</li>
+            <li><span class="check">&#10003;</span> Dedicated account manager</li>
+            <li><span class="check">&#10003;</span> 99.9% SLA guarantee</li>
+          </ul>
+          <a href="#" class="btn btn-outline">Contact Sales</a>
+        </div>
+      </div>
+      <div class="pricing-footer reveal">
+        <a href="#">View All Features & Pricing &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner section">
+    <div class="container">
+      <h2>Join 500,000+ Developers Building on CoinGecko</h2>
+      <div class="cta-banner-buttons">
+        <a href="#" class="btn btn-primary">Start for Free</a>
+        <a href="#" class="btn btn-outline-white">Contact Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq section" id="faq">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <div class="faq-question">What is the difference between Demo and Pro? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="faq-answer"><div class="faq-answer-inner">The Demo plan is free and designed for testing and prototyping with limited API calls. Pro plans (Analyst and Enterprise) offer significantly higher rate limits, access to premium endpoints including NFT data, WebSocket support, historical OHLCV data, and priority support.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-1">
+          <div class="faq-question">How do I get an API Key? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="faq-answer"><div class="faq-answer-inner">Simply create a free CoinGecko account, navigate to the Developer Dashboard, and generate your API key. You'll be making your first API call within minutes — no credit card required for the Demo plan.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-1">
+          <div class="faq-question">Does CoinGecko offer WebSocket support? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="faq-answer"><div class="faq-answer-inner">Yes. WebSocket support is available on Pro and Enterprise plans, enabling real-time streaming data for price updates, trade data, and order book changes without constant polling.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-2">
+          <div class="faq-question">What are the rate limits for the Free plan? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="faq-answer"><div class="faq-answer-inner">The free Demo plan includes 10,000 API calls per month with a rate limit of 10-30 calls per minute. This is sufficient for testing, prototyping, and small personal projects.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-2">
+          <div class="faq-question">How often is data refreshed? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="faq-answer"><div class="faq-answer-inner">Market data is refreshed every 30-60 seconds depending on the endpoint and your plan tier. Enterprise customers can access near real-time data with sub-30-second refresh intervals via WebSocket.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-3">
+          <div class="faq-question">Can I access NFT floor prices? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+          <div class="faq-answer"><div class="faq-answer-inner">Yes. NFT floor prices, market caps, volume data, and collection metadata are available via dedicated NFT endpoints. This data covers major marketplaces including OpenSea and Magic Eden.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo" style="color:#4BCC00;">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#4BCC00"/><circle cx="12" cy="13" r="2.5" fill="#fff"/><circle cx="11.5" cy="12.5" r="1" fill="#111827"/><ellipse cx="16" cy="20" rx="6" ry="4" fill="#3da600"/></svg>
+            CoinGecko
+          </a>
+          <p>The world's largest independent crypto data aggregator, powering 500,000+ developers with reliable market data.</p>
+          <div class="footer-newsletter">
+            <p style="font-size:13px;color:#9ca3af;margin-bottom:4px;">Stay updated</p>
+            <div class="nl-form">
+              <input type="email" placeholder="Your email address">
+              <button>Subscribe</button>
+            </div>
+          </div>
+          <div class="social-row">
+            <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+            <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#">API Pricing</a>
+          <a href="#">API Documentation</a>
+          <a href="#">API Status</a>
+          <a href="#">Pro API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Help Center</a>
+          <a href="#">API Guides</a>
+          <a href="#">Case Studies</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About Us</a>
+          <a href="#">Careers</a>
+          <a href="#">Brand Assets</a>
+          <div class="footer-solutions">
+            <h5>Explore More</h5>
+            <a href="#">On-Chain DEX API &rarr;</a><br>
+            <a href="#">Enterprise Data Feed &rarr;</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 CoinGecko. All rights reserved.</span>
+        <div>
+          <a href="#">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // === Navbar scroll ===
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // === Mobile menu ===
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // === Scroll reveal ===
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // === Counter-up ===
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseFloat(el.dataset.target);
+        const isDecimal = el.dataset.decimal === 'true';
+        const duration = 2000;
+        const start = performance.now();
+        const animate = (now) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = eased * target;
+          el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current).toLocaleString();
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+        requestAnimationFrame(animate);
+        counterObserver.unobserve(el);
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
+
+    // === Tabs ===
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelector(`[data-panel="${btn.dataset.tab}"]`).classList.add('active');
+      });
+    });
+
+    // === Accordion (mobile) ===
+    document.querySelectorAll('.accordion-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const isOpen = trigger.classList.contains('open');
+        // close all
+        document.querySelectorAll('.accordion-trigger').forEach(t => t.classList.remove('open'));
+        document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
+        if (!isOpen) {
+          trigger.classList.add('open');
+          trigger.nextElementSibling.classList.add('open');
+        }
+      });
+    });
+
+    // === FAQ ===
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        const wasOpen = item.classList.contains('open');
+        // optional: close others
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!wasOpen) item.classList.add('open');
+      });
+    });
+
+    // === Playground ===
+    const responses = {
+      bitcoin: `{
+  "bitcoin": {
+    "usd": 97432.18,
+    "usd_24h_change": 2.34,
+    "usd_market_cap": 1912345678901,
+    "last_updated_at": 1738425600
+  }
+}`,
+      ethereum: `{
+  "ethereum": {
+    "usd": 3284.56,
+    "usd_24h_change": -0.87,
+    "usd_market_cap": 394827561234,
+    "last_updated_at": 1738425600
+  }
+}`
+    };
+    document.getElementById('runBtn').addEventListener('click', () => {
+      const coin = document.getElementById('coinSelect').value;
+      const output = document.getElementById('playgroundOutput');
+      output.textContent = '  Fetching...';
+      output.style.color = '#6b7280';
+      setTimeout(() => {
+        output.style.color = '#d1d5db';
+        output.innerHTML = `<span style="color:#6b7280">// 200 OK — ${new Date().toISOString()}</span>\n\n` +
+          responses[coin]
+            .replace(/"(\w+)"/g, '<span style="color:#93c5fd">"$1"</span>')
+            .replace(/: (\d[\d,.]*)/g, ': <span style="color:#fcd34d">$1</span>')
+            .replace(/: (-\d[\d,.]*)/g, ': <span style="color:#fcd34d">$1</span>');
+      }, 600);
+    });
+  </script>
+
+</body>
+</html>
