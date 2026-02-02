@@ -1,0 +1,351 @@
+<!--
+  ============================================================
+  CoinGecko Landing Page Template
+  ============================================================
+
+  HOW TO USE:
+  1. Copy this file and rename it (e.g. pricing.html, guides.html)
+  2. Update the <title> and <meta description>
+  3. Replace the PAGE CONTENT section between the markers
+  4. Update the active nav link if needed
+
+  AVAILABLE SECTION CLASSES:
+  - .section              → standard padding (80px top/bottom)
+  - .section-alt           → light grey background (#F8F9FA)
+  - .section-dark          → dark background (#111827), use --text-on-dark colors
+  - .container             → centered max-width wrapper (1200px)
+
+  AVAILABLE COMPONENTS:
+  - .btn.btn-primary       → green CTA button
+  - .btn.btn-outline       → bordered button
+  - .btn.btn-outline-white → white bordered button (for dark sections)
+  - .section-header        → centered h2 + p intro block
+  - .reveal                → scroll-reveal animation (add .reveal-delay-1 through 4)
+  - .code-block            → dark code snippet box
+  - .card-grid             → 2-column card layout
+  - .doc-card              → card with icon, title, description
+
+  BRAND COLORS (CSS variables):
+  --green: #4BCC00          --bg-white: #FFFFFF
+  --green-hover: #43b800    --bg-alt: #F8F9FA
+  --green-light: #e2f9d0    --bg-dark: #111827
+  --text-primary: #111827   --text-secondary: #4B5563
+  --text-muted: #9CA3AF     --text-on-dark: #F9FAFB
+
+  FONTS:
+  --font-heading: Quicksand (Bold)
+  --font-body: Inter
+  --font-mono: JetBrains Mono
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ✏️ UPDATE: Page title -->
+  <title>Page Title - CoinGecko API</title>
+  <!-- ✏️ UPDATE: Page description -->
+  <meta name="description" content="Page description here.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ===== SHARED RESET & BRAND ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --green: #4BCC00;
+      --green-hover: #43b800;
+      --green-light: #e2f9d0;
+      --green-glow: rgba(75, 204, 0, 0.25);
+      --bg-white: #FFFFFF;
+      --bg-alt: #F8F9FA;
+      --bg-dark: #111827;
+      --bg-dark-card: #1a2332;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #9CA3AF;
+      --text-on-dark: #F9FAFB;
+      --border: #E5E7EB;
+      --border-light: #F3F4F6;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.12);
+      --shadow-green: 0 4px 20px rgba(75,204,0,0.3);
+      --font-heading: 'Quicksand', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --max-w: 1200px;
+      --nav-h: 72px;
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-body); color: var(--text-primary); background: var(--bg-white); line-height: 1.6; overflow-x: hidden; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    h1, h2, h3, h4 { font-family: var(--font-heading); font-weight: 700; line-height: 1.2; }
+
+    /* Layout */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .section { padding: 80px 0; }
+    .section-alt { padding: 80px 0; background: var(--bg-alt); }
+    .section-dark { padding: 80px 0; background: var(--bg-dark); color: var(--text-on-dark); }
+    @media (max-width: 768px) { .section, .section-alt, .section-dark { padding: 56px 0; } }
+
+    /* Buttons */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: var(--radius-sm); font-weight: 600; font-size: 15px; transition: all 0.25s ease; white-space: nowrap; }
+    .btn-primary { background: var(--green); color: #fff; box-shadow: var(--shadow-green); }
+    .btn-primary:hover { background: var(--green-hover); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(75,204,0,0.4); }
+    .btn-outline { border: 2px solid var(--border); color: var(--text-primary); background: var(--bg-white); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.3); color: #fff; }
+    .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+    /* Section header */
+    .section-header { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+    .section-header h2 { font-size: clamp(26px, 3vw, 36px); margin-bottom: 12px; }
+    .section-header p { font-size: 17px; color: var(--text-secondary); }
+
+    /* Scroll reveal */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.35s; }
+
+    /* Cards */
+    .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .card-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    @media (max-width: 768px) { .card-grid, .card-grid-3 { grid-template-columns: 1fr; } }
+
+    .card { background: var(--bg-white); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: box-shadow 0.3s, transform 0.3s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card h3 { font-size: 18px; margin-bottom: 8px; }
+    .card p { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+    .card-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); background: var(--green-light); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .card-icon svg { width: 22px; height: 22px; color: var(--green); }
+
+    /* Code block */
+    .code-block { background: var(--bg-dark); border-radius: var(--radius-sm); padding: 20px; font-family: var(--font-mono); font-size: 13px; color: #d1d5db; line-height: 1.8; overflow-x: auto; margin: 16px 0; }
+    .code-block .key { color: #93c5fd; }
+    .code-block .str { color: #86efac; }
+    .code-block .num { color: #fcd34d; }
+    .code-block .dim { color: #6b7280; }
+
+    /* ===== NAVBAR ===== */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color 0.3s, box-shadow 0.3s; }
+    .navbar.scrolled { border-bottom-color: var(--border); box-shadow: var(--shadow-sm); }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-heading); font-weight: 700; font-size: 22px; color: var(--green); }
+    .nav-logo svg { flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a { font-size: 15px; font-weight: 500; color: var(--text-secondary); transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    .nav-cta { display: flex; align-items: center; gap: 12px; }
+    .nav-cta .btn { padding: 10px 22px; font-size: 14px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; padding: 8px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text-primary); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+    .mobile-menu { display: none; position: fixed; top: var(--nav-h); left: 0; right: 0; background: var(--bg-white); border-bottom: 1px solid var(--border); padding: 24px; box-shadow: var(--shadow-md); z-index: 999; }
+    .mobile-menu.open { display: block; }
+    .mobile-menu a { display: block; padding: 12px 0; font-size: 16px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid var(--border-light); }
+    .mobile-menu .btn { width: 100%; margin-top: 16px; }
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ===== FOOTER ===== */
+    .footer { background: var(--bg-dark); color: var(--text-on-dark); padding: 64px 0 0; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: 48px; margin-bottom: 48px; }
+    .footer-brand p { font-size: 14px; color: #9ca3af; line-height: 1.7; margin-top: 16px; max-width: 280px; }
+    .footer-col h4 { font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 20px; font-family: var(--font-body); }
+    .footer-col a { display: block; font-size: 14px; color: #d1d5db; padding: 5px 0; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--green); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 0; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-muted); flex-wrap: wrap; gap: 12px; }
+    .footer-bottom a { color: var(--text-muted); transition: color 0.2s; }
+    .footer-bottom a:hover { color: var(--green); }
+    .social-row { display: flex; gap: 16px; margin-top: 24px; }
+    .social-row a { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .social-row a:hover { background: var(--green); }
+    .social-row svg { width: 16px; height: 16px; color: #d1d5db; }
+    @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- ========== NAVBAR (shared) ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="nav-logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="16" fill="#4BCC00"/>
+          <circle cx="12" cy="13" r="2.5" fill="#fff"/>
+          <circle cx="11.5" cy="12.5" r="1" fill="#111827"/>
+          <ellipse cx="16" cy="20" rx="6" ry="4" fill="#3da600"/>
+          <path d="M10 20c0-1.5 2.7-3 6-3s6 1.5 6 3" stroke="#fff" stroke-width="0.8" fill="none"/>
+        </svg>
+        CoinGecko
+      </a>
+      <!-- ✏️ UPDATE: Add .active class to current page link -->
+      <div class="nav-links">
+        <a href="index.html#use-cases">Products</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="docs.html">Docs</a>
+        <a href="index.html#faq">FAQ</a>
+      </div>
+      <div class="nav-cta">
+        <a href="docs.html" class="btn btn-outline" style="padding:10px 18px;font-size:14px;">Explore Docs</a>
+        <a href="#" class="btn btn-primary" style="padding:10px 18px;font-size:14px;">Get API Key</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#use-cases">Products</a>
+    <a href="index.html#pricing">Pricing</a>
+    <a href="docs.html">Docs</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="#" class="btn btn-primary">Get API Key</a>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- ✏️ PAGE CONTENT — REPLACE BELOW THIS LINE  -->
+  <!-- ========================================== -->
+
+  <!-- Example: Simple hero + content page -->
+  <section style="padding-top:calc(var(--nav-h) + 48px);" class="section">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2>Page Title Here</h2>
+        <p>A brief description of what this page is about.</p>
+      </div>
+
+      <!-- Your page-specific content goes here -->
+      <div class="card-grid-3">
+        <div class="card reveal reveal-delay-1">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <h3>Feature One</h3>
+          <p>Description of this feature or section content.</p>
+        </div>
+        <div class="card reveal reveal-delay-2">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <h3>Feature Two</h3>
+          <p>Description of this feature or section content.</p>
+        </div>
+        <div class="card reveal reveal-delay-3">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+          </div>
+          <h3>Feature Three</h3>
+          <p>Description of this feature or section content.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Example: Dark CTA section -->
+  <section class="section-dark">
+    <div class="container" style="text-align:center;">
+      <h2 style="font-size:clamp(26px,3vw,38px);margin-bottom:24px;" class="reveal">Ready to Get Started?</h2>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal reveal-delay-1">
+        <a href="#" class="btn btn-primary">Start for Free</a>
+        <a href="#" class="btn btn-outline-white">Contact Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- ✏️ END PAGE CONTENT                        -->
+  <!-- ========================================== -->
+
+
+  <!-- ========== FOOTER (shared) ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="nav-logo" style="color:#4BCC00;">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#4BCC00"/><circle cx="12" cy="13" r="2.5" fill="#fff"/><circle cx="11.5" cy="12.5" r="1" fill="#111827"/><ellipse cx="16" cy="20" rx="6" ry="4" fill="#3da600"/></svg>
+            CoinGecko
+          </a>
+          <p>The world's largest independent crypto data aggregator, powering 500,000+ developers with reliable market data.</p>
+          <div class="social-row">
+            <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+            <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="index.html#pricing">API Pricing</a>
+          <a href="docs.html">API Documentation</a>
+          <a href="#">API Status</a>
+          <a href="#">Pro API</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Help Center</a>
+          <a href="#">API Guides</a>
+          <a href="#">Case Studies</a>
+          <a href="#">Blog</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About Us</a>
+          <a href="#">Careers</a>
+          <a href="#">Brand Assets</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 CoinGecko. All rights reserved.</span>
+        <div>
+          <a href="#">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== SHARED JS ========== -->
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Mobile menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        mobileMenu.classList.remove('open');
+      });
+    });
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  </script>
+</body>
+</html>
